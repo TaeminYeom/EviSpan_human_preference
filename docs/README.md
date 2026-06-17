@@ -77,6 +77,8 @@ The app loads the paired files under `docs/data/`:
 - `docs/data/wmt22_en-de/remedy-r.jsonl`
 - `docs/data/wmt22_zh-en/0504_3.jsonl`
 - `docs/data/wmt22_zh-en/remedy-r.jsonl`
+- `docs/data/en-ko/0506_6.json`
+- `docs/data/en-ko/remedy-r.json`
 
 ## Export Fields
 

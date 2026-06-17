@@ -10,6 +10,12 @@ const DATASETS = [
     label: "WMT22 Chinese-English",
     evispanUrl: "./data/wmt22_zh-en/0504_3.jsonl",
     remedyUrl: "./data/wmt22_zh-en/remedy-r.jsonl"
+  },
+  {
+    id: "en-ko",
+    label: "English-Korean",
+    evispanUrl: "./data/en-ko/0506_6.jsonl",
+    remedyUrl: "./data/en-ko/remedy-r.jsonl"
   }
 ];
 
@@ -281,6 +287,7 @@ function mergeRows(dataset, evispanRows, remedyRows) {
       const remedyRow = remedyBySegId.get(String(segId)) || remedyRows[index] || {};
       const translation = firstText(
         evispanRow.hypothesis,
+        evispanRow.hypothesis_segment,
         remedyRow.target_clean,
         evispanRow.target_clean,
         remedyRow.hypothesis
@@ -293,9 +300,9 @@ function mergeRows(dataset, evispanRows, remedyRows) {
         seg_id: segId,
         original_index: index + 1,
         system: firstText(evispanRow.system, remedyRow.system),
-        source: firstText(evispanRow.source, remedyRow.source),
+        source: firstText(evispanRow.source, evispanRow.source_segment, remedyRow.source),
         translation,
-        reference: firstText(evispanRow.reference, remedyRow.reference),
+        reference: firstText(evispanRow.reference, evispanRow.reference_segment, remedyRow.reference),
         lp: firstText(remedyRow.lp, makeLanguagePair(remedyRow, evispanRow)),
         src_lang: firstText(remedyRow.src_lang, evispanRow.src_lang),
         tgt_lang: firstText(remedyRow.tgt_lang, evispanRow.tgt_lang),
