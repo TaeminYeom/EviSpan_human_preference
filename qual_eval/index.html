@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MT Evaluation Rationale Preference</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="title-block">
+          <p class="eyebrow">Human preference study</p>
+          <h1>MT Evaluation Rationale Preference</h1>
+          <p id="datasetStatus" class="status-text">Loading datasets...</p>
+        </div>
+        <div class="top-actions">
+          <button id="exportCsvBtn" class="secondary-button" type="button">Export CSV</button>
+          <button id="exportJsonBtn" class="secondary-button" type="button">Export JSON</button>
+          <button id="resetBtn" class="ghost-button" type="button">Reset</button>
+        </div>
+      </header>
+
+      <section class="setup-band" aria-label="Study setup">
+        <label class="field">
+          <span>Dataset</span>
+          <select id="datasetSelect"></select>
+        </label>
+        <label class="field">
+          <span>Participant ID</span>
+          <input id="participantInput" type="text" autocomplete="off" placeholder="anonymous">
+        </label>
+        <label class="field">
+          <span>Case order</span>
+          <select id="orderSelect">
+            <option value="random">Counterbalanced</option>
+            <option value="original">Original</option>
+            <option value="unanswered">Unanswered first</option>
+          </select>
+        </label>
+        <label class="toggle-field">
+          <input id="hideScoresInput" type="checkbox" checked>
+          <span>Hide scores</span>
+        </label>
+      </section>
+
+      <section class="progress-band" aria-label="Progress">
+        <div>
+          <span class="metric-label">Progress</span>
+          <strong id="progressText">0 / 0</strong>
+        </div>
+        <div>
+          <span class="metric-label">A wins</span>
+          <strong id="aWinsText">0</strong>
+        </div>
+        <div>
+          <span class="metric-label">B wins</span>
+          <strong id="bWinsText">0</strong>
+        </div>
+        <div>
+          <span class="metric-label">Ties</span>
+          <strong id="tiesText">0</strong>
+        </div>
+      </section>
+
+      <section class="context-band" aria-label="Translation context">
+        <div class="case-heading">
+          <div>
+            <p class="eyebrow">Case</p>
+            <h2 id="caseTitle">No case loaded</h2>
+          </div>
+          <div id="caseMeta" class="case-meta"></div>
+        </div>
+        <div class="context-grid">
+          <article>
+            <h3>Source</h3>
+            <p id="sourceText"></p>
+          </article>
+          <article>
+            <h3>Translation</h3>
+            <p id="translationText"></p>
+          </article>
+          <article>
+            <h3>Reference</h3>
+            <p id="referenceText"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="responses-grid" aria-label="Model responses">
+        <article class="response-panel">
+          <div class="response-header">
+            <h2>Response A</h2>
+            <span id="aSideLabel" class="side-label">Left</span>
+          </div>
+          <div id="responseA" class="response-body"></div>
+        </article>
+        <article class="response-panel">
+          <div class="response-header">
+            <h2>Response B</h2>
+            <span id="bSideLabel" class="side-label">Right</span>
+          </div>
+          <div id="responseB" class="response-body"></div>
+        </article>
+      </section>
+
+      <section class="decision-band" aria-label="Preference decision">
+        <div class="preference-row" role="group" aria-label="Preference">
+          <button class="preference-button" type="button" data-preference="A">A is better</button>
+          <button class="preference-button" type="button" data-preference="tie">Tie</button>
+          <button class="preference-button" type="button" data-preference="B">B is better</button>
+          <button class="preference-button" type="button" data-preference="both_bad">Both poor</button>
+        </div>
+
+        <div class="reason-row" aria-label="Preference reason tags">
+          <label><input type="checkbox" value="evidence_location"> Evidence location</label>
+          <label><input type="checkbox" value="rationale_quality"> Rationale quality</label>
+          <label><input type="checkbox" value="source_consistency"> Source consistency</label>
+          <label><input type="checkbox" value="reference_use"> Reference use</label>
+          <label><input type="checkbox" value="less_overclaiming"> Less overclaiming</label>
+        </div>
+
+        <div class="notes-row">
+          <label class="field confidence-field">
+            <span>Confidence</span>
+            <input id="confidenceInput" type="range" min="1" max="5" step="1" value="3">
+          </label>
+          <label class="field notes-field">
+            <span>Notes</span>
+            <textarea id="notesInput" rows="2" placeholder="Optional short note"></textarea>
+          </label>
+        </div>
+
+        <div class="nav-row">
+          <button id="prevBtn" class="secondary-button" type="button">Previous</button>
+          <button id="nextBtn" class="primary-button" type="button">Next</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
