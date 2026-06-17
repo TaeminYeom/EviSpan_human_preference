@@ -1,6 +1,6 @@
 # Qualitative Preference Evaluation Framework
 
-This folder contains a small web app for a blind side-by-side human preference study between EviSpan and Remedy-R explanations.
+This folder is the single source for the human preference study app and the GitHub Pages deployment.
 
 ## Research Question
 
@@ -39,28 +39,44 @@ The app includes reason tags for common analysis categories:
 - `reference_use`
 - `less_overclaiming`
 
+## GitHub Pages
+
+Configure GitHub Pages with:
+
+- Source: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/docs`
+
+After deployment, the project site should be available at:
+
+```text
+https://taeminyeom.github.io/EviSpan_human_preference/
+```
+
 ## Running Locally
 
 From the repository root:
 
-```powershell
-python -m http.server 8765
+```bash
+python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
 ```
 
 Then open:
 
 ```text
-http://localhost:8765/qual_eval/
+http://127.0.0.1:8765/
 ```
 
-The app loads the paired files under `data/`:
+On Windows PowerShell, use `py -m http.server 8765 --bind 127.0.0.1 --directory docs` if `python3` is not available.
 
-- `data/wmt22_en-de/0504_3.jsonl`
-- `data/wmt22_en-de/remedy-r.jsonl`
-- `data/wmt22_zh-en/0504_3.jsonl`
-- `data/wmt22_zh-en/remedy-r.jsonl`
+## Data Files
 
-The Chinese-English files include malformed source fields in some lines. The app repairs those source fields at load time, then parses the rest of the record normally.
+The app loads the paired files under `docs/data/`:
+
+- `docs/data/wmt22_en-de/0504_3.jsonl`
+- `docs/data/wmt22_en-de/remedy-r.jsonl`
+- `docs/data/wmt22_zh-en/0504_3.jsonl`
+- `docs/data/wmt22_zh-en/remedy-r.jsonl`
 
 ## Export Fields
 

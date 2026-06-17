@@ -2,14 +2,14 @@ const DATASETS = [
   {
     id: "wmt22_en-de",
     label: "WMT22 English-German",
-    evispanUrl: "../data/wmt22_en-de/0504_3.jsonl",
-    remedyUrl: "../data/wmt22_en-de/remedy-r.jsonl"
+    evispanUrl: "./data/wmt22_en-de/0504_3.jsonl",
+    remedyUrl: "./data/wmt22_en-de/remedy-r.jsonl"
   },
   {
     id: "wmt22_zh-en",
     label: "WMT22 Chinese-English",
-    evispanUrl: "../data/wmt22_zh-en/0504_3.jsonl",
-    remedyUrl: "../data/wmt22_zh-en/remedy-r.jsonl"
+    evispanUrl: "./data/wmt22_zh-en/0504_3.jsonl",
+    remedyUrl: "./data/wmt22_zh-en/remedy-r.jsonl"
   }
 ];
 
@@ -397,7 +397,7 @@ function renderLoadError(error) {
   els.datasetStatus.textContent = error.message;
   els.caseTitle.textContent = "Dataset unavailable";
   els.caseMeta.replaceChildren();
-  els.sourceText.textContent = "Run a local web server from the repository root, then open /qual_eval/.";
+  els.sourceText.textContent = "Run a local web server from the repository root with --directory docs, then open /.";
   els.translationText.textContent = "";
   els.referenceText.textContent = "";
   setEmptyResponse(els.responseA, "No response loaded");
