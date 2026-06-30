@@ -543,31 +543,7 @@ function renderFreeResponse(container, output) {
 }
 
 function renderAnnotatedText(container, text) {
-  container.replaceChildren();
-  const pattern = /<v(\d+)>([\s\S]*?)<\/v\1>/g;
-  let cursor = 0;
-  let match = pattern.exec(text);
-
-  while (match) {
-    if (match.index > cursor) {
-      container.append(document.createTextNode(text.slice(cursor, match.index)));
-    }
-    const span = document.createElement("span");
-    span.className = "error-span";
-    span.dataset.label = `v${match[1]}`;
-    span.textContent = match[2];
-    container.append(span);
-    cursor = match.index + match[0].length;
-    match = pattern.exec(text);
-  }
-
-  if (cursor < text.length) {
-    container.append(document.createTextNode(text.slice(cursor)));
-  }
-
-  if (!text) {
-    appendEmpty(container, "No annotated translation");
-  }
+  container.textContent = text || "No annotated translation";
 }
 
 function addResponseSection(container, title) {
