@@ -20,6 +20,8 @@ Each item shows:
 
 Response A and Response B are assigned by a deterministic counterbalance using participant ID, dataset ID, and case ID. The app stores the real model identity only in the export.
 
+To avoid presentation bias while keeping responses easy to scan, both model outputs use the same section component and identical typography. EviSpan fields and Remedy-R's numbered evaluation criteria are separated into labeled sections without model-specific visual emphasis.
+
 ## Recommended Judgment Criteria
 
 Ask annotators to prefer the response that better supports a translation quality decision. Useful signals:

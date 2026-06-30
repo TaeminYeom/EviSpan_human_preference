@@ -342,7 +342,7 @@ function normalizeEvispan(row) {
   const answer = row.answer || {};
   return {
     model: "evispan",
-    kind: "structured_spans",
+    kind: "evispan",
     annotated_translation: firstText(answer.annotated_translation, row.hypothesis, row.target_clean),
     errors: Array.isArray(answer.errors) ? answer.errors : [],
     rationale: firstText(answer.rationale, row.rationale),
@@ -353,7 +353,7 @@ function normalizeEvispan(row) {
 function normalizeRemedy(row) {
   return {
     model: "remedy",
-    kind: "free_response",
+    kind: "remedy",
     full_response: firstText(row.full_response, row.response, row.answer),
     score: firstText(row.generated_score, row.quality_score, row.score)
   };
@@ -481,69 +481,88 @@ function renderOutput(container, output) {
     return;
   }
 
-  if (output.kind === "structured_spans") {
-    renderStructuredOutput(container, output);
-    return;
-  }
-
-  renderFreeResponse(container, output);
+  const sections = output.kind === "evispan"
+    ? makeEvispanSections(output)
+    : makeRemedySections(output);
+  renderResponseSections(container, sections);
 }
 
-function renderStructuredOutput(container, output) {
-  const annotatedSection = addResponseSection(container, "Annotated translation");
-  const annotatedText = document.createElement("p");
-  annotatedText.className = "annotated-text";
-  renderAnnotatedText(annotatedText, output.annotated_translation || "");
-  annotatedSection.append(annotatedText);
-
-  const errorsSection = addResponseSection(container, "Errors");
-  if (output.errors.length) {
-    const list = document.createElement("ol");
-    list.className = "error-list";
-    output.errors.forEach((error, index) => {
-      const item = document.createElement("li");
+function makeEvispanSections(output) {
+  const errors = output.errors.length
+    ? output.errors.map((error, index) => {
       const category = firstText(error.category, error.type, "unknown");
       const severity = firstText(error.severity, "unknown");
-      item.textContent = `v${index} | ${category} | ${severity}`;
-      list.append(item);
+      return `v${index} | ${category} | ${severity}`;
+    }).join("\n")
+    : "No errors listed";
+
+  const sections = [
+    {
+      title: "Annotated translation",
+      text: output.annotated_translation || "No annotated translation"
+    },
+    { title: "Errors", text: errors },
+    { title: "Rationale", text: output.rationale || "No rationale provided" }
+  ];
+
+  if (!els.hideScoresInput.checked && output.score !== "") {
+    sections.push({ title: "Score", text: String(output.score) });
+  }
+
+  return sections;
+}
+
+function makeRemedySections(output) {
+  const rawText = output.full_response || "No response provided";
+  const text = els.hideScoresInput.checked ? redactScores(rawText) : rawText;
+  const headingPattern = /^\s*(\d+)[.)]\s+\*{0,2}([^:\n*]+?)\*{0,2}:\*{0,2}\s*(.*)$/gm;
+  const matches = Array.from(text.matchAll(headingPattern));
+
+  if (!matches.length) {
+    return [{ title: "Response", text }];
+  }
+
+  const sections = [];
+  const overview = text.slice(0, matches[0].index).trim();
+  if (overview) {
+    sections.push({ title: "Overview", text: overview });
+  }
+
+  let summary = "";
+  matches.forEach((match, index) => {
+    const contentStart = match.index + match[0].length;
+    const contentEnd = matches[index + 1]?.index ?? text.length;
+    const trailingContent = text.slice(contentStart, contentEnd).trim();
+    let content = [match[3].trim(), trailingContent].filter(Boolean).join("\n\n");
+
+    if (index === matches.length - 1) {
+      const summaryStart = content.indexOf("\n\n");
+      if (summaryStart >= 0) {
+        summary = content.slice(summaryStart).trim();
+        content = content.slice(0, summaryStart).trim();
+      }
+    }
+
+    sections.push({
+      title: match[2].trim(),
+      text: content || "No details provided"
     });
-    errorsSection.append(list);
-  } else {
-    appendEmpty(errorsSection, "No errors listed");
+  });
+
+  if (summary) {
+    sections.push({ title: "Summary", text: summary });
   }
 
-  const rationaleSection = addResponseSection(container, "Rationale");
-  const rationale = document.createElement("p");
-  rationale.textContent = output.rationale || "No rationale provided";
-  rationaleSection.append(rationale);
-
-  if (!els.hideScoresInput.checked && output.score !== "") {
-    const scoreSection = addResponseSection(container, "Score");
-    const score = document.createElement("span");
-    score.className = "score-chip";
-    score.textContent = String(output.score);
-    scoreSection.append(score);
-  }
+  return sections;
 }
 
-function renderFreeResponse(container, output) {
-  const responseSection = addResponseSection(container, "Full response");
-  const pre = document.createElement("pre");
-  const text = output.full_response || "No response provided";
-  pre.textContent = els.hideScoresInput.checked ? redactScores(text) : text;
-  responseSection.append(pre);
-
-  if (!els.hideScoresInput.checked && output.score !== "") {
-    const scoreSection = addResponseSection(container, "Parsed score");
-    const score = document.createElement("span");
-    score.className = "score-chip";
-    score.textContent = String(output.score);
-    scoreSection.append(score);
-  }
-}
-
-function renderAnnotatedText(container, text) {
-  container.textContent = text || "No annotated translation";
+function renderResponseSections(container, sections) {
+  sections.forEach(({ title, text }) => {
+    const section = addResponseSection(container, title);
+    const pre = document.createElement("pre");
+    pre.textContent = text;
+    section.append(pre);
+  });
 }
 
 function addResponseSection(container, title) {
@@ -570,6 +589,7 @@ function appendEmpty(container, text) {
 
 function redactScores(text) {
   return text
+    .replace(/(\[\[\[score\]\]\]\s*)[-+]?\d+(?:\.\d+)?/gi, "$1[hidden]")
     .replace(/(Score:\s*)[-+]?\d+(?:\.\d+)?(?:\s*\(0-100\))?/gi, "$1[hidden]")
     .replace(/(final score(?: is|:)?\s*)[-+]?\d+(?:\.\d+)?/gi, "$1[hidden]")
     .replace(/(Overall score:\s*)[-+]?\d+(?:\.\d+)?/gi, "$1[hidden]");

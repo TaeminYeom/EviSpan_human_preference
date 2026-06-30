@@ -343,30 +343,7 @@ select {
 .response-section pre {
   margin: 0;
   white-space: pre-wrap;
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-  font-size: 0.9rem;
-}
-
-.annotated-text {
-  margin-bottom: 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.error-list {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.score-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  border-radius: 999px;
-  padding: 4px 11px;
-  background: var(--warm-soft);
-  color: var(--warm);
-  font-weight: 800;
+  font: inherit;
 }
 
 .decision-band {
