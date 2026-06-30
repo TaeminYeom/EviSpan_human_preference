@@ -2,20 +2,26 @@ const DATASETS = [
   {
     id: "wmt22_en-de",
     label: "WMT22 English-German",
-    evispanUrl: "./data/wmt22_en-de/0504_3.jsonl",
+    evispanUrl: "./data/wmt22_en-de/evispan.jsonl",
     remedyUrl: "./data/wmt22_en-de/remedy-r.jsonl"
   },
   {
     id: "wmt22_zh-en",
     label: "WMT22 Chinese-English",
-    evispanUrl: "./data/wmt22_zh-en/0504_3.jsonl",
+    evispanUrl: "./data/wmt22_zh-en/evispan.jsonl",
     remedyUrl: "./data/wmt22_zh-en/remedy-r.jsonl"
   },
   {
-    id: "en-ko",
-    label: "English-Korean",
-    evispanUrl: "./data/en-ko/0506_6.jsonl",
-    remedyUrl: "./data/en-ko/remedy-r.jsonl"
+    id: "wmt22_en-ko",
+    label: "WMT22 English-Korean",
+    evispanUrl: "./data/wmt22_en-ko/evispan.jsonl",
+    remedyUrl: "./data/wmt22_en-ko/remedy-r.jsonl"
+  },
+  {
+    id: "wmt22_en-ru",
+    label: "WMT22 English-Russian",
+    evispanUrl: "./data/wmt22_en-ru/evispan.jsonl",
+    remedyUrl: "./data/wmt22_en-ru/remedy-r.jsonl"
   }
 ];
 
@@ -24,7 +30,7 @@ const MODEL_LABELS = {
   remedy: "Remedy-R"
 };
 
-const STORAGE_PREFIX = "mt-rationale-preference-v1";
+const STORAGE_PREFIX = "mt-rationale-preference-v2";
 const SESSION_KEY = `${STORAGE_PREFIX}:session`;
 const META_KEY = `${STORAGE_PREFIX}:meta`;
 
@@ -276,15 +282,16 @@ function safeJsonString(value) {
 }
 
 function mergeRows(dataset, evispanRows, remedyRows) {
-  const remedyBySegId = new Map();
-  remedyRows.forEach((row, index) => {
-    remedyBySegId.set(String(row.seg_id ?? `row-${index}`), row);
-  });
+  const caseIdCounts = new Map();
 
   return evispanRows
     .map((evispanRow, index) => {
       const segId = evispanRow.seg_id ?? remedyRows[index]?.seg_id ?? index + 1;
-      const remedyRow = remedyBySegId.get(String(segId)) || remedyRows[index] || {};
+      const remedyRow = remedyRows[index] || {};
+      const caseIdBase = `${dataset.id}:${segId}`;
+      const occurrence = (caseIdCounts.get(caseIdBase) || 0) + 1;
+      caseIdCounts.set(caseIdBase, occurrence);
+      const caseId = occurrence === 1 ? caseIdBase : `${caseIdBase}:${occurrence}`;
       const translation = firstText(
         evispanRow.hypothesis,
         evispanRow.hypothesis_segment,
@@ -294,7 +301,7 @@ function mergeRows(dataset, evispanRows, remedyRows) {
       );
 
       return {
-        id: `${dataset.id}:${segId}`,
+        id: caseId,
         dataset_id: dataset.id,
         dataset_label: dataset.label,
         seg_id: segId,

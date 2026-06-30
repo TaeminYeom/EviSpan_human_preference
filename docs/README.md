@@ -73,12 +73,14 @@ On Windows PowerShell, use `py -m http.server 8765 --bind 127.0.0.1 --directory 
 
 The app loads the paired files under `docs/data/`:
 
-- `docs/data/wmt22_en-de/0504_3.jsonl`
+- `docs/data/wmt22_en-de/evispan.jsonl`
 - `docs/data/wmt22_en-de/remedy-r.jsonl`
-- `docs/data/wmt22_zh-en/0504_3.jsonl`
+- `docs/data/wmt22_zh-en/evispan.jsonl`
 - `docs/data/wmt22_zh-en/remedy-r.jsonl`
-- `docs/data/en-ko/0506_6.json`
-- `docs/data/en-ko/remedy-r.json`
+- `docs/data/wmt22_en-ko/evispan.jsonl`
+- `docs/data/wmt22_en-ko/remedy-r.jsonl`
+- `docs/data/wmt22_en-ru/evispan.jsonl`
+- `docs/data/wmt22_en-ru/remedy-r.jsonl`
 
 ## Export Fields
 
