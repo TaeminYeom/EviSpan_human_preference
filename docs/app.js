@@ -559,7 +559,10 @@ function makeRemedySections(output) {
   });
 
   if (summary) {
-    sections.push({ title: "Summary", text: summary });
+    sections.push({
+      title: "Summary",
+      text: els.hideScoresInput.checked ? redactSummaryIntegers(summary) : summary
+    });
   }
 
   return sections;
@@ -602,6 +605,10 @@ function redactScores(text) {
     .replace(/(Score:\s*)[-+]?\d+(?:\.\d+)?(?:\s*\(0-100\))?/gi, "$1[hidden]")
     .replace(/(final score(?: is|:)?\s*)[-+]?\d+(?:\.\d+)?/gi, "$1[hidden]")
     .replace(/(Overall score:\s*)[-+]?\d+(?:\.\d+)?/gi, "$1[hidden]");
+}
+
+function redactSummaryIntegers(text) {
+  return text.replace(/(^|[^\d.])(100|[1-9]?\d)(?!\d|\.\d)/g, "$1[hidden]");
 }
 
 function renderDecision() {
