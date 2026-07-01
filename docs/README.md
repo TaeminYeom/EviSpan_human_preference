@@ -2,11 +2,15 @@
 
 This folder is the single source for the human preference study app and the GitHub Pages deployment.
 
-## Research Question
+## Research Questions
 
-For the same source, candidate translation, and reference, which model response gives a more useful and better grounded basis for assessing translation quality?
+For the same source, candidate translation, and reference, annotators answer three questions:
 
-The primary judgment should focus on evidence usefulness, not on whether the numeric score alone is preferred.
+1. **Correctness / Faithfulness:** Which feedback is more accurate and better supported by the source, translation, and reference? Consider whether it correctly identifies real errors, avoids unsupported or exaggerated claims, and does not miss important problems.
+2. **Key issue identification:** Which feedback better identifies the main translation problems that most affect translation quality?
+3. **Overall usefulness — primary outcome:** Overall, which feedback is more useful for understanding the translation quality?
+
+All three questions use the same four choices: A is better, tie, B is better, or both poor. A case counts as complete only after all three questions are answered. The primary judgment is Q3 and should focus on evidence usefulness, not on whether the numeric score alone is preferred.
 
 ## Study Unit
 
@@ -99,19 +103,25 @@ CSV and JSON exports include:
 - `reference`
 - `response_a_model`
 - `response_b_model`
-- `preference_side`
-- `preferred_model`
-- `preferred_model_label`
+- `q1_correctness_side`
+- `q1_correctness_model`
+- `q1_correctness_model_label`
+- `q2_key_issue_side`
+- `q2_key_issue_model`
+- `q2_key_issue_model_label`
+- `q3_overall_side`
+- `q3_overall_model`
+- `q3_overall_model_label`
 - `reason_tags`
 - `confidence`
 - `notes`
 - `updated_at`
 
-For ties and `both_bad`, `preferred_model` is empty by design.
+For ties and `both_bad`, the corresponding model and model-label fields are empty by design.
 
 ## Analysis Plan
 
-Use preference rate as the main descriptive statistic:
+Use the Q3 overall-usefulness preference rate as the main descriptive statistic:
 
 ```text
 EviSpan preference rate = EviSpan wins / (EviSpan wins + Remedy-R wins)

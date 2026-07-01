@@ -50,18 +50,6 @@
           <span class="metric-label">Progress</span>
           <strong id="progressText">0 / 0</strong>
         </div>
-        <div>
-          <span class="metric-label">A wins</span>
-          <strong id="aWinsText">0</strong>
-        </div>
-        <div>
-          <span class="metric-label">B wins</span>
-          <strong id="bWinsText">0</strong>
-        </div>
-        <div>
-          <span class="metric-label">Ties</span>
-          <strong id="tiesText">0</strong>
-        </div>
       </section>
 
       <section class="context-band" aria-label="Translation context">
@@ -106,13 +94,47 @@
       </section>
 
       <section class="decision-band" aria-label="Preference decision">
-        <div class="preference-row" role="group" aria-label="Preference">
-          <button class="preference-button" type="button" data-preference="A">A is better</button>
-          <button class="preference-button" type="button" data-preference="tie">Tie</button>
-          <button class="preference-button" type="button" data-preference="B">B is better</button>
-          <button class="preference-button" type="button" data-preference="both_bad">Both poor</button>
+        <div class="question-block">
+          <div class="question-heading">
+            <p class="question-number">Q1. Correctness / Faithfulness</p>
+            <h3>Which feedback is more accurate and better supported by the source, translation, and reference?</h3>
+            <p>Consider whether it correctly identifies real errors, avoids unsupported or exaggerated claims, and does not miss important problems.</p>
+          </div>
+          <div class="preference-row" role="group" aria-label="Q1 Correctness and faithfulness">
+            <button class="preference-button" type="button" data-question="q1_correctness" data-preference="A">A is better</button>
+            <button class="preference-button" type="button" data-question="q1_correctness" data-preference="tie">Tie</button>
+            <button class="preference-button" type="button" data-question="q1_correctness" data-preference="B">B is better</button>
+            <button class="preference-button" type="button" data-question="q1_correctness" data-preference="both_bad">Both poor</button>
+          </div>
         </div>
 
+        <div class="question-block">
+          <div class="question-heading">
+            <p class="question-number">Q2. Key issue identification</p>
+            <h3>Which feedback better identifies the main translation problems that most affect translation quality?</h3>
+          </div>
+          <div class="preference-row" role="group" aria-label="Q2 Key issue identification">
+            <button class="preference-button" type="button" data-question="q2_key_issue" data-preference="A">A is better</button>
+            <button class="preference-button" type="button" data-question="q2_key_issue" data-preference="tie">Tie</button>
+            <button class="preference-button" type="button" data-question="q2_key_issue" data-preference="B">B is better</button>
+            <button class="preference-button" type="button" data-question="q2_key_issue" data-preference="both_bad">Both poor</button>
+          </div>
+        </div>
+
+        <div class="question-block primary-question">
+          <div class="question-heading">
+            <p class="question-number">Q3. Overall usefulness <span>Primary outcome</span></p>
+            <h3>Overall, which feedback is more useful for understanding the translation quality?</h3>
+          </div>
+          <div class="preference-row" role="group" aria-label="Q3 Overall usefulness">
+            <button class="preference-button" type="button" data-question="q3_overall" data-preference="A">A is better</button>
+            <button class="preference-button" type="button" data-question="q3_overall" data-preference="tie">Tie</button>
+            <button class="preference-button" type="button" data-question="q3_overall" data-preference="B">B is better</button>
+            <button class="preference-button" type="button" data-question="q3_overall" data-preference="both_bad">Both poor</button>
+          </div>
+        </div>
+
+        <p class="supplementary-label">Optional details for the overall judgment</p>
         <div class="reason-row" aria-label="Preference reason tags">
           <label><input type="checkbox" value="evidence_location"> Evidence location</label>
           <label><input type="checkbox" value="rationale_quality"> Rationale quality</label>

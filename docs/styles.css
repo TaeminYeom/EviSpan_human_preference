@@ -189,7 +189,7 @@ select {
 
 .progress-band {
   display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-columns: minmax(120px, 1fr);
   gap: 1px;
   overflow: hidden;
   padding: 16px 0;
@@ -321,10 +321,7 @@ select {
 }
 
 .response-body {
-  max-height: 640px;
   padding: 16px;
-  overflow: auto;
-  scrollbar-gutter: stable;
 }
 
 .response-section + .response-section {
@@ -347,14 +344,68 @@ select {
 }
 
 .decision-band {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
   display: grid;
   gap: 14px;
-  padding: 16px 0 0;
-  background: rgba(247, 246, 242, 0.96);
-  backdrop-filter: blur(8px);
+  padding: 22px 0 0;
+}
+
+.question-block {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.primary-question {
+  border-color: var(--accent);
+}
+
+.question-heading {
+  display: grid;
+  gap: 5px;
+}
+
+.question-heading h3,
+.question-heading p {
+  margin: 0;
+}
+
+.question-heading h3 {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.question-heading > p:last-child:not(.question-number) {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.question-number {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.question-number span {
+  display: inline-block;
+  margin-left: 6px;
+  border-radius: 999px;
+  padding: 2px 7px;
+  background: var(--accent-soft);
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+.supplementary-label {
+  margin: 4px 0 -4px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
 }
 
 .preference-row,
@@ -472,10 +523,6 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .progress-band {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .decision-band {
     position: static;
   }
@@ -485,10 +532,6 @@ select {
   .app-shell {
     width: min(100% - 20px, 1440px);
     padding-top: 14px;
-  }
-
-  .progress-band {
-    grid-template-columns: 1fr;
   }
 
   .preference-button,

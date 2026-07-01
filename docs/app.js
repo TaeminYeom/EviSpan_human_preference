@@ -30,7 +30,8 @@ const MODEL_LABELS = {
   remedy: "Remedy-R"
 };
 
-const STORAGE_PREFIX = "mt-rationale-preference-v2";
+const QUESTION_KEYS = ["q1_correctness", "q2_key_issue", "q3_overall"];
+const STORAGE_PREFIX = "mt-rationale-preference-v3";
 const SESSION_KEY = `${STORAGE_PREFIX}:session`;
 const META_KEY = `${STORAGE_PREFIX}:meta`;
 
@@ -59,9 +60,6 @@ function bindElements() {
     hideScoresInput: document.querySelector("#hideScoresInput"),
     datasetStatus: document.querySelector("#datasetStatus"),
     progressText: document.querySelector("#progressText"),
-    aWinsText: document.querySelector("#aWinsText"),
-    bWinsText: document.querySelector("#bWinsText"),
-    tiesText: document.querySelector("#tiesText"),
     caseTitle: document.querySelector("#caseTitle"),
     caseMeta: document.querySelector("#caseMeta"),
     sourceText: document.querySelector("#sourceText"),
@@ -130,7 +128,9 @@ function initControls() {
   });
 
   els.preferenceButtons.forEach((button) => {
-    button.addEventListener("click", () => setPreference(button.dataset.preference));
+    button.addEventListener("click", () => {
+      setPreference(button.dataset.question, button.dataset.preference);
+    });
   });
 
   els.reasonInputs.forEach((input) => {
@@ -598,11 +598,11 @@ function redactScores(text) {
 function renderDecision() {
   const item = getCurrentCase();
   const annotation = item ? state.annotations[item.id] : null;
-  const preference = annotation?.preference_side || "";
   const tags = new Set(annotation?.reason_tags || []);
 
   els.preferenceButtons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.preference === preference);
+    const selected = annotation?.[`${button.dataset.question}_side`] || "";
+    button.classList.toggle("active", button.dataset.preference === selected);
   });
 
   els.reasonInputs.forEach((input) => {
@@ -618,26 +618,18 @@ function renderDecision() {
 function renderProgress() {
   const total = state.allCases.length;
   const annotations = Object.values(state.annotations);
-  const completed = annotations.filter((item) => item.preference_side).length;
-  const aWins = annotations.filter((item) => item.preference_side === "A").length;
-  const bWins = annotations.filter((item) => item.preference_side === "B").length;
-  const ties = annotations.filter((item) => item.preference_side === "tie").length;
+  const completed = annotations.filter(isCompleteAnnotation).length;
 
   els.progressText.textContent = `${completed} / ${total}`;
-  els.aWinsText.textContent = String(aWins);
-  els.bWinsText.textContent = String(bWins);
-  els.tiesText.textContent = String(ties);
 }
 
-function setPreference(preference) {
+function setPreference(question, preference) {
   const item = getCurrentCase();
-  if (!item) return;
+  if (!item || !QUESTION_KEYS.includes(question)) return;
   const mapping = getMapping(item);
-  const preferredModel = preference === "A" || preference === "B" ? mapping[preference] : "";
 
   updateCurrentAnnotation({
-    preference_side: preference,
-    preferred_model: preferredModel,
+    [`${question}_side`]: preference,
     response_a_model: mapping.A,
     response_b_model: mapping.B
   });
@@ -685,10 +677,6 @@ function handleKeyboard(event) {
 
   if (event.key === "ArrowLeft") moveCase(-1);
   if (event.key === "ArrowRight") moveCase(1);
-  if (event.key === "1") setPreference("A");
-  if (event.key === "2") setPreference("tie");
-  if (event.key === "3") setPreference("B");
-  if (event.key === "4") setPreference("both_bad");
 }
 
 function exportCsv() {
@@ -720,10 +708,9 @@ function buildExportRows() {
       const annotation = state.annotations[item.id];
       if (!annotation) return null;
       const mapping = getMapping(item);
-      const preferredModel =
-        annotation.preference_side === "A" || annotation.preference_side === "B"
-          ? mapping[annotation.preference_side]
-          : "";
+      const q1Model = preferredModelFor(annotation.q1_correctness_side, mapping);
+      const q2Model = preferredModelFor(annotation.q2_key_issue_side, mapping);
+      const q3Model = preferredModelFor(annotation.q3_overall_side, mapping);
 
       return {
         participant_id: annotation.participant_id || getParticipantKey(),
@@ -738,9 +725,15 @@ function buildExportRows() {
         reference: item.reference,
         response_a_model: mapping.A,
         response_b_model: mapping.B,
-        preference_side: annotation.preference_side || "",
-        preferred_model: preferredModel,
-        preferred_model_label: preferredModel ? MODEL_LABELS[preferredModel] : "",
+        q1_correctness_side: annotation.q1_correctness_side || "",
+        q1_correctness_model: q1Model,
+        q1_correctness_model_label: q1Model ? MODEL_LABELS[q1Model] : "",
+        q2_key_issue_side: annotation.q2_key_issue_side || "",
+        q2_key_issue_model: q2Model,
+        q2_key_issue_model_label: q2Model ? MODEL_LABELS[q2Model] : "",
+        q3_overall_side: annotation.q3_overall_side || "",
+        q3_overall_model: q3Model,
+        q3_overall_model_label: q3Model ? MODEL_LABELS[q3Model] : "",
         reason_tags: (annotation.reason_tags || []).join("|"),
         confidence: annotation.confidence || "",
         notes: annotation.notes || "",
@@ -764,9 +757,15 @@ function getExportHeaders() {
     "reference",
     "response_a_model",
     "response_b_model",
-    "preference_side",
-    "preferred_model",
-    "preferred_model_label",
+    "q1_correctness_side",
+    "q1_correctness_model",
+    "q1_correctness_model_label",
+    "q2_key_issue_side",
+    "q2_key_issue_model",
+    "q2_key_issue_model_label",
+    "q3_overall_side",
+    "q3_overall_model",
+    "q3_overall_model_label",
     "reason_tags",
     "confidence",
     "notes",
@@ -780,6 +779,10 @@ function csvCell(value) {
     return `"${text.replace(/"/g, '""')}"`;
   }
   return text;
+}
+
+function preferredModelFor(preference, mapping) {
+  return preference === "A" || preference === "B" ? mapping[preference] : "";
 }
 
 function downloadText(text, fileName, type) {
@@ -813,7 +816,11 @@ function getCurrentCase() {
 }
 
 function isComplete(caseId) {
-  return Boolean(state.annotations[caseId]?.preference_side);
+  return isCompleteAnnotation(state.annotations[caseId]);
+}
+
+function isCompleteAnnotation(annotation) {
+  return Boolean(annotation && QUESTION_KEYS.every((question) => annotation[`${question}_side`]));
 }
 
 function getDataset() {
