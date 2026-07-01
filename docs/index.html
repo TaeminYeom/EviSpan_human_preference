@@ -134,14 +134,36 @@
           </div>
         </div>
 
-        <p class="supplementary-label">Optional details for the overall judgment</p>
-        <div class="reason-row" aria-label="Preference reason tags">
+        <p class="supplementary-label">Optional reasons for the overall judgment</p>
+        <div class="reason-row" aria-label="Preference reason tags" aria-describedby="reasonGuide">
+          <label><input type="checkbox" value="main_issue"> Main issue</label>
           <label><input type="checkbox" value="evidence_location"> Evidence location</label>
-          <label><input type="checkbox" value="rationale_quality"> Rationale quality</label>
-          <label><input type="checkbox" value="source_consistency"> Source consistency</label>
-          <label><input type="checkbox" value="reference_use"> Reference use</label>
-          <label><input type="checkbox" value="less_overclaiming"> Less overclaiming</label>
+          <label><input type="checkbox" value="groundedness"> Groundedness</label>
+          <label><input type="checkbox" value="no_unsupported_claims"> No unsupported claims</label>
+          <label><input type="checkbox" value="other"> Other</label>
         </div>
+        <dl id="reasonGuide" class="reason-guide">
+          <div>
+            <dt>Main issue</dt>
+            <dd>Better identifies important translation problems</dd>
+          </div>
+          <div>
+            <dt>Evidence location</dt>
+            <dd>Better pinpoints the error location or supporting evidence</dd>
+          </div>
+          <div>
+            <dt>Groundedness</dt>
+            <dd>Better grounded in the source, translation, and reference</dd>
+          </div>
+          <div>
+            <dt>No unsupported claims</dt>
+            <dd>Does not invent or exaggerate errors</dd>
+          </div>
+          <div>
+            <dt>Other</dt>
+            <dd>Other reason</dd>
+          </div>
+        </dl>
 
         <div class="notes-row">
           <label class="field confidence-field">

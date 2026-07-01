@@ -39,11 +39,13 @@ Ask annotators to prefer the response that better supports a translation quality
 
 The app includes reason tags for common analysis categories:
 
+- `main_issue`
 - `evidence_location`
-- `rationale_quality`
-- `source_consistency`
-- `reference_use`
-- `less_overclaiming`
+- `groundedness`
+- `no_unsupported_claims`
+- `other`
+
+The checkbox labels stay concise and appear above a separate on-screen guide that explains each tag in English. Previously saved `rationale_quality`, `source_consistency`, and `reference_use` tags are migrated to `groundedness`; `less_overclaiming` is migrated to `no_unsupported_claims`.
 
 ## GitHub Pages
 

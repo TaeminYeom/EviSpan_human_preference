@@ -31,6 +31,20 @@ const MODEL_LABELS = {
 };
 
 const QUESTION_KEYS = ["q1_correctness", "q2_key_issue", "q3_overall"];
+const REASON_TAGS = new Set([
+  "main_issue",
+  "evidence_location",
+  "groundedness",
+  "no_unsupported_claims",
+  "other"
+]);
+const LEGACY_REASON_TAGS = {
+  evidence_location: "evidence_location",
+  rationale_quality: "groundedness",
+  source_consistency: "groundedness",
+  reference_use: "groundedness",
+  less_overclaiming: "no_unsupported_claims"
+};
 const STORAGE_PREFIX = "mt-rationale-preference-v3";
 const SESSION_KEY = `${STORAGE_PREFIX}:session`;
 const META_KEY = `${STORAGE_PREFIX}:meta`;
@@ -847,10 +861,33 @@ function annotationStorageKey() {
 
 function loadAnnotations() {
   try {
-    return JSON.parse(localStorage.getItem(annotationStorageKey()) || "{}");
+    const annotations = JSON.parse(localStorage.getItem(annotationStorageKey()) || "{}");
+    let migrated = false;
+
+    for (const annotation of Object.values(annotations)) {
+      if (!Array.isArray(annotation?.reason_tags)) continue;
+      const normalizedTags = normalizeReasonTags(annotation.reason_tags);
+      if (normalizedTags.join("|") !== annotation.reason_tags.join("|")) {
+        annotation.reason_tags = normalizedTags;
+        migrated = true;
+      }
+    }
+
+    if (migrated) {
+      localStorage.setItem(annotationStorageKey(), JSON.stringify(annotations));
+    }
+    return annotations;
   } catch (error) {
     return {};
   }
+}
+
+function normalizeReasonTags(tags) {
+  return [...new Set(
+    tags
+      .map((tag) => LEGACY_REASON_TAGS[tag] || tag)
+      .filter((tag) => REASON_TAGS.has(tag))
+  )];
 }
 
 function saveAnnotations() {
