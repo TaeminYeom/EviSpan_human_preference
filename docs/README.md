@@ -47,6 +47,18 @@ The app includes reason tags for common analysis categories:
 
 The checkbox labels stay concise and appear above a separate on-screen guide that explains each tag in English. Previously saved `rationale_quality`, `source_consistency`, and `reference_use` tags are migrated to `groundedness`; `less_overclaiming` is migrated to `no_unsupported_claims`.
 
+## Evaluator Tutorial
+
+The full evaluation guide opens before the study begins. Evaluators can reopen it from the `Evaluation guide` button in the top action bar. Hovering over or focusing that button shows a compact reminder during evaluation; clicking it opens the full guide, including the distinction between `Tie` and `Both poor`.
+
+The tutorial follows the pairwise LLM-as-a-judge rubric used in the EviSpan paper:
+
+- Evaluate the feedback rather than choosing the better translation.
+- Treat the source as authoritative and the reference as potentially imperfect supporting evidence.
+- Check correctness, key-issue identification, and overall usefulness.
+- Do not reward length, brevity, tags, headings, or formatting by themselves.
+- Use `Tie` for similarly useful responses and `Both poor` only when both responses are substantially unreliable or unhelpful.
+
 ## GitHub Pages
 
 Configure GitHub Pages with:

@@ -128,6 +128,252 @@ h3 {
   gap: 10px;
 }
 
+.guide-control {
+  position: relative;
+}
+
+.guide-button {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  padding: 9px 14px;
+  font-weight: 800;
+}
+
+.guide-button:hover,
+.guide-button:focus-visible {
+  border-color: var(--accent-strong);
+  background: #d5ebe3;
+}
+
+.guide-tooltip {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(390px, calc(100vw - 32px));
+  padding: 14px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.guide-tooltip::before {
+  position: absolute;
+  top: -6px;
+  right: 24px;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line-strong);
+  background: var(--surface);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.guide-control:hover .guide-tooltip,
+.guide-control:focus-within .guide-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.guide-tooltip strong {
+  color: var(--accent-strong);
+}
+
+.guide-tooltip ul {
+  margin: 8px 0;
+  padding-left: 18px;
+}
+
+.guide-tooltip p {
+  margin: 8px 0 4px;
+}
+
+.guide-tooltip > span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.guide-dialog {
+  width: min(760px, calc(100% - 32px));
+  max-height: min(88vh, 900px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgba(34, 33, 31, 0.24);
+  overflow: hidden;
+}
+
+.guide-dialog[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.guide-dialog::backdrop {
+  background: rgba(34, 33, 31, 0.58);
+  backdrop-filter: blur(2px);
+}
+
+.guide-dialog-header,
+.guide-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+}
+
+.guide-dialog-header {
+  border-bottom: 1px solid var(--line);
+  background: #fbfaf7;
+}
+
+.guide-dialog-header h2 {
+  font-size: 1.3rem;
+}
+
+.dialog-close-button {
+  min-width: 40px;
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.dialog-close-button:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.guide-dialog-body {
+  min-height: 0;
+  padding: 20px 22px;
+  overflow-y: auto;
+}
+
+.guide-intro {
+  margin-bottom: 18px;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.guide-steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide-step;
+}
+
+.guide-steps li {
+  display: grid;
+  grid-template-columns: 32px 150px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 11px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  counter-increment: guide-step;
+}
+
+.guide-steps li::before {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  content: counter(guide-step);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.guide-steps li > strong {
+  padding-top: 3px;
+}
+
+.guide-steps li > span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.guide-section {
+  margin-top: 20px;
+}
+
+.guide-section h3 {
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+
+.guide-section ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.choice-guide {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.choice-guide div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+}
+
+.choice-guide dt {
+  font-weight: 800;
+}
+
+.choice-guide dd {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.primary-reminder {
+  margin: 20px 0 0;
+  padding: 11px 13px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.reopen-guide-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.guide-dialog-footer {
+  justify-content: flex-end;
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  background: #fbfaf7;
+}
+
 .setup-band {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(170px, 0.8fr) auto;
@@ -540,6 +786,16 @@ select {
     justify-content: flex-start;
   }
 
+  .guide-tooltip {
+    right: auto;
+    left: 0;
+  }
+
+  .guide-tooltip::before {
+    right: auto;
+    left: 24px;
+  }
+
   .setup-band,
   .context-grid,
   .responses-grid {
@@ -561,5 +817,29 @@ select {
   .top-actions button,
   .nav-row button {
     width: 100%;
+  }
+
+  .guide-control {
+    width: 100%;
+  }
+
+  .guide-steps li {
+    grid-template-columns: 32px 1fr;
+  }
+
+  .guide-steps li > span {
+    grid-column: 2;
+  }
+
+  .choice-guide div {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .guide-dialog-header,
+  .guide-dialog-body,
+  .guide-dialog-footer {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }

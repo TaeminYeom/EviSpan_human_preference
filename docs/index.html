@@ -16,6 +16,27 @@
           <p id="datasetStatus" class="status-text">Loading datasets...</p>
         </div>
         <div class="top-actions">
+          <div class="guide-control">
+            <button
+              id="guideBtn"
+              class="guide-button"
+              type="button"
+              aria-haspopup="dialog"
+              aria-controls="guideDialog"
+              aria-describedby="guideTooltip"
+            >Evaluation guide</button>
+            <div id="guideTooltip" class="guide-tooltip" role="tooltip">
+              <strong>Quick guide</strong>
+              <ul>
+                <li>Evaluate the feedback, not the translation itself.</li>
+                <li>The Source is authoritative; the Reference may be imperfect.</li>
+                <li>Check correctness, the main issue, and overall usefulness.</li>
+                <li>Ignore length, tags, headings, and formatting.</li>
+              </ul>
+              <p><strong>Tie:</strong> similar quality · <strong>Both poor:</strong> both substantially unreliable or unhelpful</p>
+              <span>Click to open the full guide.</span>
+            </div>
+          </div>
           <button id="exportCsvBtn" class="secondary-button" type="button">Export CSV</button>
           <button id="exportJsonBtn" class="secondary-button" type="button">Export JSON</button>
           <button id="resetBtn" class="ghost-button" type="button">Reset</button>
@@ -178,5 +199,80 @@
         </div>
       </section>
     </main>
+
+    <dialog id="guideDialog" class="guide-dialog" aria-labelledby="guideTitle">
+      <div class="guide-dialog-header">
+        <div>
+          <p class="eyebrow">Before you begin</p>
+          <h2 id="guideTitle">How to compare the feedback</h2>
+        </div>
+        <button id="closeGuideBtn" class="dialog-close-button" type="button" aria-label="Close evaluation guide">×</button>
+      </div>
+
+      <div class="guide-dialog-body">
+        <p class="guide-intro">
+          In each case, you will compare two anonymous feedback responses about the same machine translation.
+          Your task is <strong>not to choose the better translation</strong>. Decide which feedback better helps
+          a human reviewer understand the translation's quality and its important problems.
+        </p>
+
+        <ol class="guide-steps">
+          <li>
+            <strong>Check the evidence</strong>
+            <span>Read the Source, Translation, and Reference. The Source is authoritative; the Reference is supporting evidence and may be imperfect.</span>
+          </li>
+          <li>
+            <strong>Evaluate correctness</strong>
+            <span>Prefer feedback that identifies real errors and explains them accurately. Penalize invented, exaggerated, unsupported, or contradictory claims.</span>
+          </li>
+          <li>
+            <strong>Find the key issue</strong>
+            <span>Prefer feedback that captures the most important problem affecting translation quality. Good feedback should not invent problems when the translation is acceptable.</span>
+          </li>
+          <li>
+            <strong>Judge overall usefulness</strong>
+            <span>Consider whether the feedback clearly explains why an issue matters and helps a reviewer understand the translation quality. Providing a rewritten translation is not required.</span>
+          </li>
+        </ol>
+
+        <section class="guide-section">
+          <h3>Avoid presentation bias</h3>
+          <ul>
+            <li>Do not prefer a response because it is longer or shorter.</li>
+            <li>Do not prefer a response because it uses tags, labels, headings, or elaborate formatting.</li>
+            <li>More detail is valuable only when it is correct and useful.</li>
+            <li>Judge each response by its content, not by how confident it sounds.</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h3>Choosing an answer</h3>
+          <dl class="choice-guide">
+            <div>
+              <dt>A/B is better</dt>
+              <dd>One response is meaningfully better for the current question.</dd>
+            </div>
+            <div>
+              <dt>Tie</dt>
+              <dd>Both responses are similarly useful or similarly acceptable.</dd>
+            </div>
+            <div>
+              <dt>Both poor</dt>
+              <dd>Both have substantial errors, unsupported claims, or omissions that make them unreliable or unhelpful. Do not use this merely because neither response is perfect.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <p class="primary-reminder"><strong>Q3 Overall usefulness</strong> is the primary judgment.</p>
+        <p class="reopen-guide-note">
+          You can review this tutorial again at any time by clicking the <strong>Evaluation guide</strong>
+          button at the top of the page.
+        </p>
+      </div>
+
+      <div class="guide-dialog-footer">
+        <button id="startEvaluationBtn" class="primary-button" type="button" autofocus>Start evaluation</button>
+      </div>
+    </dialog>
   </body>
 </html>

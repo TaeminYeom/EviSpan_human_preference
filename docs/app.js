@@ -63,6 +63,7 @@ const els = {};
 document.addEventListener("DOMContentLoaded", () => {
   bindElements();
   initControls();
+  initTutorial();
   loadDataset();
 });
 
@@ -89,9 +90,38 @@ function bindElements() {
     exportCsvBtn: document.querySelector("#exportCsvBtn"),
     exportJsonBtn: document.querySelector("#exportJsonBtn"),
     resetBtn: document.querySelector("#resetBtn"),
+    guideBtn: document.querySelector("#guideBtn"),
+    guideDialog: document.querySelector("#guideDialog"),
+    closeGuideBtn: document.querySelector("#closeGuideBtn"),
+    startEvaluationBtn: document.querySelector("#startEvaluationBtn"),
     preferenceButtons: Array.from(document.querySelectorAll(".preference-button")),
     reasonInputs: Array.from(document.querySelectorAll(".reason-row input[type='checkbox']"))
   });
+}
+
+function initTutorial() {
+  els.guideBtn.addEventListener("click", openTutorial);
+  els.closeGuideBtn.addEventListener("click", closeTutorial);
+  els.startEvaluationBtn.addEventListener("click", closeTutorial);
+  openTutorial();
+}
+
+function openTutorial() {
+  if (els.guideDialog.open) return;
+  if (typeof els.guideDialog.showModal === "function") {
+    els.guideDialog.showModal();
+  } else {
+    els.guideDialog.setAttribute("open", "");
+  }
+}
+
+function closeTutorial() {
+  if (!els.guideDialog.open) return;
+  if (typeof els.guideDialog.close === "function") {
+    els.guideDialog.close();
+  } else {
+    els.guideDialog.removeAttribute("open");
+  }
 }
 
 function initControls() {
