@@ -98,7 +98,7 @@
           <div class="question-heading">
             <p class="question-number">Q1. Correctness / Faithfulness</p>
             <h3>Which feedback is more accurate and better supported by the source, translation, and reference?</h3>
-            <p>Consider whether it correctly identifies real errors, avoids unsupported or exaggerated claims, and does not miss important problems.</p>
+            <p>Consider whether it correctly identifies real errors, avoids unsupported, exaggerated, or hallucinated claims—including details not present in the inputs—and does not miss important problems.</p>
           </div>
           <div class="preference-row" role="group" aria-label="Q1 Correctness and faithfulness">
             <button class="preference-button" type="button" data-question="q1_correctness" data-preference="A">A is better</button>
@@ -161,15 +161,11 @@
           </div>
           <div>
             <dt>Other</dt>
-            <dd>Other reason</dd>
+            <dd>Other reason; please describe it in Notes below</dd>
           </div>
         </dl>
 
         <div class="notes-row">
-          <label class="field confidence-field">
-            <span>Confidence</span>
-            <input id="confidenceInput" type="range" min="1" max="5" step="1" value="3">
-          </label>
           <label class="field notes-field">
             <span>Notes</span>
             <textarea id="notesInput" rows="2" placeholder="Optional short note"></textarea>

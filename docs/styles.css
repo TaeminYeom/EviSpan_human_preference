@@ -482,14 +482,6 @@ select {
   align-items: stretch;
 }
 
-.confidence-field {
-  flex: 0 1 180px;
-}
-
-.confidence-field input {
-  padding: 0;
-}
-
 .notes-field {
   flex: 1 1 360px;
 }

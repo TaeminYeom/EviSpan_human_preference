@@ -83,7 +83,6 @@ function bindElements() {
     responseB: document.querySelector("#responseB"),
     aSideLabel: document.querySelector("#aSideLabel"),
     bSideLabel: document.querySelector("#bSideLabel"),
-    confidenceInput: document.querySelector("#confidenceInput"),
     notesInput: document.querySelector("#notesInput"),
     prevBtn: document.querySelector("#prevBtn"),
     nextBtn: document.querySelector("#nextBtn"),
@@ -151,10 +150,6 @@ function initControls() {
     input.addEventListener("change", () => {
       updateCurrentAnnotation({ reason_tags: getSelectedReasonTags() });
     });
-  });
-
-  els.confidenceInput.addEventListener("input", () => {
-    updateCurrentAnnotation({ confidence: Number(els.confidenceInput.value) });
   });
 
   els.notesInput.addEventListener("input", () => {
@@ -623,7 +618,6 @@ function renderDecision() {
     input.checked = tags.has(input.value);
   });
 
-  els.confidenceInput.value = annotation?.confidence || 3;
   els.notesInput.value = annotation?.notes || "";
   els.prevBtn.disabled = state.currentIndex <= 0;
   els.nextBtn.disabled = state.currentIndex >= state.orderedCases.length - 1;
@@ -663,7 +657,6 @@ function updateCurrentAnnotation(patch) {
     participant_id: getParticipantKey(),
     response_a_model: mapping.A,
     response_b_model: mapping.B,
-    confidence: 3,
     notes: "",
     reason_tags: [],
     ...existing,
@@ -749,7 +742,6 @@ function buildExportRows() {
         q3_overall_model: q3Model,
         q3_overall_model_label: q3Model ? MODEL_LABELS[q3Model] : "",
         reason_tags: (annotation.reason_tags || []).join("|"),
-        confidence: annotation.confidence || "",
         notes: annotation.notes || "",
         updated_at: annotation.updated_at || ""
       };
@@ -781,7 +773,6 @@ function getExportHeaders() {
     "q3_overall_model",
     "q3_overall_model_label",
     "reason_tags",
-    "confidence",
     "notes",
     "updated_at"
   ];
@@ -865,11 +856,19 @@ function loadAnnotations() {
     let migrated = false;
 
     for (const annotation of Object.values(annotations)) {
-      if (!Array.isArray(annotation?.reason_tags)) continue;
-      const normalizedTags = normalizeReasonTags(annotation.reason_tags);
-      if (normalizedTags.join("|") !== annotation.reason_tags.join("|")) {
-        annotation.reason_tags = normalizedTags;
+      if (!annotation || typeof annotation !== "object") continue;
+
+      if (Object.hasOwn(annotation, "confidence")) {
+        delete annotation.confidence;
         migrated = true;
+      }
+
+      if (Array.isArray(annotation.reason_tags)) {
+        const normalizedTags = normalizeReasonTags(annotation.reason_tags);
+        if (normalizedTags.join("|") !== annotation.reason_tags.join("|")) {
+          annotation.reason_tags = normalizedTags;
+          migrated = true;
+        }
       }
     }
 

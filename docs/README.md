@@ -6,7 +6,7 @@ This folder is the single source for the human preference study app and the GitH
 
 For the same source, candidate translation, and reference, annotators answer three questions:
 
-1. **Correctness / Faithfulness:** Which feedback is more accurate and better supported by the source, translation, and reference? Consider whether it correctly identifies real errors, avoids unsupported or exaggerated claims, and does not miss important problems.
+1. **Correctness / Faithfulness:** Which feedback is more accurate and better supported by the source, translation, and reference? Consider whether it correctly identifies real errors, avoids unsupported, exaggerated, or hallucinated claims—including details not present in the inputs—and does not miss important problems.
 2. **Key issue identification:** Which feedback better identifies the main translation problems that most affect translation quality?
 3. **Overall usefulness — primary outcome:** Overall, which feedback is more useful for understanding the translation quality?
 
@@ -115,7 +115,6 @@ CSV and JSON exports include:
 - `q3_overall_model`
 - `q3_overall_model_label`
 - `reason_tags`
-- `confidence`
 - `notes`
 - `updated_at`
 
